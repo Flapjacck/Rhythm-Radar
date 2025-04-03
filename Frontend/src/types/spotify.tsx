@@ -30,3 +30,20 @@ export interface ListeningStats {
     consistent_favorites: Array<{ id: string; name: string }>;
   };
 }
+
+export interface NowPlaying {
+  is_playing: boolean;
+  track?: {
+    id: string;
+    name: string;
+    artists: Array<{ name: string; id: string }>;
+    album: {
+      name: string;
+      images: Array<{ url: string; height: number; width: number }>;
+    };
+    preview_url: string | null;
+    external_urls: { spotify: string };
+    progress_ms: number;
+    duration_ms: number;
+  };
+}

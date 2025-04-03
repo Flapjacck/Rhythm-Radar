@@ -3,6 +3,7 @@ import NavBar from "../components/ui/NavBar";
 import TopArtistsCard from "../components/cards/TopArtistsCard";
 import TopTracksCard from "../components/cards/TopTracksCard";
 import ListeningStatsCard from "../components/cards/ListeningStatsCard";
+import NowPlayingCard from "../components/cards/NowPlayingCard";
 
 const Dashboard = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
@@ -55,6 +56,10 @@ const Dashboard = () => {
           <p className="text-gray-300 text-lg mb-6">
             Your personalized music insights dashboard
           </p>
+
+          <div className="mt-10">
+            <NowPlayingCard />
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
             <TopArtistsCard onArtistClick={handleArtistClick} />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Artist, Track, ListeningStats } from "../types/spotify";
+import { Artist, Track, ListeningStats, NowPlaying } from "../types/spotify";
 
 interface ApiResponse<T> {
   data: T | null;
@@ -114,6 +114,48 @@ export function useListeningStats(): ApiResponse<ListeningStats> {
 
     fetchData();
   }, []);
+
+  return state;
+}
+
+export function useNowPlaying(
+  pollingInterval = 10000 // Poll every 10 seconds by default
+): ApiResponse<NowPlaying> {
+  const [state, setState] = useState<ApiResponse<NowPlaying>>({
+    data: null,
+    loading: true,
+    error: null,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/now-playing");
+        const data = await response.json();
+
+        if (response.ok) {
+          setState({ data, loading: false, error: null });
+        } else {
+          setState({
+            data: null,
+            loading: false,
+            error: data.error || "Failed to fetch currently playing track",
+          });
+        }
+      } catch (error) {
+        setState({ data: null, loading: false, error: "Network error" });
+      }
+    };
+
+    // Initial fetch
+    fetchData();
+
+    // Set up polling
+    const intervalId = setInterval(fetchData, pollingInterval);
+
+    // Clean up on unmount
+    return () => clearInterval(intervalId);
+  }, [pollingInterval]);
 
   return state;
 }
