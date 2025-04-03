@@ -92,6 +92,38 @@ def fetch_playlist(playlist_input: str):
             content={"error": f"Failed to fetch playlist: {str(e)}"}
         )
 
+@router.get("/user-playlists")
+def get_user_playlists(limit: int = 50):
+    """
+    Get the current user's playlists for selection
+    """
+    try:
+        sp = get_spotify_client()
+        
+        # Get current user's playlists
+        results = sp.current_user_playlists(limit=limit)
+        
+        # Format the response
+        playlists = []
+        for item in results['items']:
+            # Only include playlists that the user owns and can modify
+            if item['owner']['id'] == sp.current_user()['id']:
+                playlists.append({
+                    'id': item['id'],
+                    'name': item['name'],
+                    'description': item.get('description', ''),
+                    'tracks_total': item['tracks']['total'],
+                    'images': item['images']
+                })
+        
+        return {'playlists': playlists}
+        
+    except Exception as e:
+        return JSONResponse(
+            status_code=500, 
+            content={"error": f"Failed to fetch user playlists: {str(e)}"}
+        )
+
 # Define Pydantic models for request bodies
 class PlaylistCreate(BaseModel):
     name: str
@@ -150,10 +182,15 @@ def add_tracks(track_data: AddTracks):
             batch = track_uris[i:i+100]
             sp.playlist_add_items(track_data.playlist_id, batch)
         
+        # Get playlist info to return
+        playlist = sp.playlist(track_data.playlist_id)
+        
         return {
             'success': True,
             'message': f"{len(track_data.track_ids)} tracks added to playlist",
-            'playlist_id': track_data.playlist_id
+            'playlist_id': track_data.playlist_id,
+            'playlist_name': playlist['name'],
+            'external_url': playlist['external_urls']['spotify']
         }
         
     except Exception as e:
