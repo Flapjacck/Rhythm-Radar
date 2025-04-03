@@ -47,3 +47,25 @@ export interface NowPlaying {
     duration_ms: number;
   };
 }
+
+export interface PlaylistData {
+  playlist: {
+    id: string;
+    name: string;
+    description: string;
+    owner: string;
+    images: Array<{ url: string; height: number; width: number }>;
+    tracks_total: number;
+  };
+  tracks: Array<{
+    id: string;
+    name: string;
+    artists: Array<{ name: string; id: string }>;
+    album: {
+      name: string;
+      images: Array<{ url: string; height: number; width: number }>;
+    };
+    duration_ms: number;
+    preview_url: string | null;
+  }>;
+}

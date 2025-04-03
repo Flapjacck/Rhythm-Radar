@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Artist, Track, ListeningStats, NowPlaying } from "../types/spotify";
+import {
+  Artist,
+  Track,
+  ListeningStats,
+  NowPlaying,
+  PlaylistData,
+} from "../types/spotify";
 
 interface ApiResponse<T> {
   data: T | null;
@@ -158,4 +164,141 @@ export function useNowPlaying(
   }, [pollingInterval]);
 
   return state;
+}
+
+export function usePlaylistTool() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [playlistData, setPlaylistData] = useState<PlaylistData | null>(null);
+  const [selectedTracks, setSelectedTracks] = useState<Set<string>>(new Set());
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const fetchPlaylist = async (playlistInput: string) => {
+    setIsLoading(true);
+    setError(null);
+    setPlaylistData(null);
+    setSelectedTracks(new Set());
+    setSuccessMessage(null);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/playlist/fetch?playlist_input=${encodeURIComponent(
+          playlistInput
+        )}`
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch playlist");
+      }
+
+      setPlaylistData(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const toggleTrackSelection = (trackId: string) => {
+    const newSelected = new Set(selectedTracks);
+    if (newSelected.has(trackId)) {
+      newSelected.delete(trackId);
+    } else {
+      newSelected.add(trackId);
+    }
+    setSelectedTracks(newSelected);
+  };
+
+  const createPlaylist = async (name: string, description?: string) => {
+    if (!selectedTracks.size) {
+      setError("Please select at least one track");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      // Step 1: Create a new playlist
+      const createResponse = await fetch(
+        "http://localhost:8000/api/playlist/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            description: description || "Created with Rhythm Radar",
+            public: false,
+          }),
+        }
+      );
+
+      const createData = await createResponse.json();
+      if (!createResponse.ok) {
+        throw new Error(createData.error || "Failed to create playlist");
+      }
+
+      // Step 2: Add selected tracks to the playlist
+      const trackIdsArray = Array.from(selectedTracks);
+      const addTracksResponse = await fetch(
+        "http://localhost:8000/api/playlist/add-tracks",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            playlist_id: createData.id,
+            track_ids: trackIdsArray,
+          }),
+        }
+      );
+
+      const addTracksData = await addTracksResponse.json();
+      if (!addTracksResponse.ok) {
+        throw new Error(
+          addTracksData.error || "Failed to add tracks to playlist"
+        );
+      }
+
+      setSuccessMessage(
+        `Successfully created playlist "${name}" with ${selectedTracks.size} tracks! 🎉`
+      );
+
+      // Return the playlist URL for opening in Spotify
+      return createData.external_url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const selectAllTracks = () => {
+    if (!playlistData) return;
+    const allTrackIds = new Set(playlistData.tracks.map((track) => track.id));
+    setSelectedTracks(allTrackIds);
+  };
+
+  const clearSelection = () => {
+    setSelectedTracks(new Set());
+  };
+
+  return {
+    isLoading,
+    error,
+    playlistData,
+    selectedTracks,
+    successMessage,
+    fetchPlaylist,
+    toggleTrackSelection,
+    createPlaylist,
+    selectAllTracks,
+    clearSelection,
+  };
 }

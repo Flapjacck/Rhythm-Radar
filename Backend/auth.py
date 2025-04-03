@@ -27,6 +27,8 @@ sp_oauth = SpotifyOAuth(
     "user-library-read "          # Access saved tracks/albums
     "user-read-playback-state "   # Read playback state
     "playlist-read-private "      # Read private playlists
+    "playlist-modify-private "    # Create/modify private playlists
+    "playlist-modify-public "     # Create/modify public playlists
     "user-read-currently-playing "# What they're listening to right now
     "user-follow-read"            # See who they follow
     ),

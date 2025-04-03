@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 # Import routers
 from auth import router as auth_router
 from music_stats import router as music_stats_router
-from recommended import router as recommended_router
+from playlist_tool import router as playlist_tool_router
 
 # Load environment variables
 load_dotenv()
@@ -25,7 +25,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(music_stats_router)
-app.include_router(recommended_router)
+app.include_router(playlist_tool_router)
 
 # Root endpoint
 @app.get("/")

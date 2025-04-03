@@ -5,6 +5,7 @@ import TopArtistsCard from "../components/cards/TopArtistsCard";
 import TopTracksCard from "../components/cards/TopTracksCard";
 import ListeningStatsCard from "../components/cards/ListeningStatsCard";
 import NowPlayingCard from "../components/cards/NowPlayingCard";
+import PlaylistToolCard from "../components/cards/PlaylistToolCard";
 
 const Dashboard = () => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
@@ -66,6 +67,10 @@ const Dashboard = () => {
             <TopArtistsCard onArtistClick={handleArtistClick} />
             <TopTracksCard onTrackClick={handleTrackPlay} />
             <ListeningStatsCard />
+          </div>
+
+          <div className="mt-10">
+            <PlaylistToolCard />
           </div>
         </section>
       </div>
