@@ -37,8 +37,20 @@ const NavBar = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  // Close mobile menu when window resizes to desktop width
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [mobileMenuOpen]);
+
   return (
-    <nav className="bg-neutral-900 border-b border-neutral-800 py-4 px-6">
+    <nav className="bg-neutral-900 border-b border-neutral-800 py-4 px-6 relative z-20">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -69,7 +81,8 @@ const NavBar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMobileMenu}
-              className="text-white focus:outline-none"
+              className="text-white focus:outline-none p-2 rounded-md hover:bg-white/10 transition-colors"
+              aria-label="Toggle menu"
             >
               <svg
                 className="w-6 h-6"
@@ -98,29 +111,57 @@ const NavBar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Fixed positioning */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-neutral-800">
-            {userProfile && (
-              <div className="flex items-center gap-3 mb-4">
-                <UserAvatar
-                  imageUrl={userProfile.images?.[0]?.url || null}
-                  isPremium={userProfile.product === "premium"}
-                  size="md"
+          <div className="fixed inset-x-0 top-[72px] z-50 bg-neutral-900 border-b border-neutral-800 shadow-lg animate-fadeIn md:hidden">
+            <div className="p-4 max-w-5xl mx-auto">
+              {userProfile ? (
+                <div className="flex items-center gap-3 mb-4 p-2">
+                  <UserAvatar
+                    imageUrl={userProfile.images?.[0]?.url || null}
+                    isPremium={userProfile.product === "premium"}
+                    size="md"
+                  />
+                  <span className="text-white font-medium">
+                    {userProfile.display_name}
+                  </span>
+                </div>
+              ) : (
+                <div className="h-12 flex items-center justify-center mb-4">
+                  <span className="text-gray-400">Loading profile...</span>
+                </div>
+              )}
+              <div className="grid gap-2">
+                <Button
+                  text="Dashboard"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    window.location.href = "/";
+                  }}
+                  className="w-full justify-center py-2 text-base"
                 />
-                <span className="text-white font-medium">
-                  {userProfile.display_name}
-                </span>
+                <Button
+                  text="Logout"
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full justify-center py-2 text-base bg-gradient-to-r from-red-500 to-rose-600"
+                />
               </div>
-            )}
-            <Button
-              text="Logout"
-              onClick={logout}
-              className="w-full justify-center"
-            />
+            </div>
           </div>
         )}
       </div>
+
+      {/* Modal overlay for mobile menu - dims the background when menu is open */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
     </nav>
   );
 };

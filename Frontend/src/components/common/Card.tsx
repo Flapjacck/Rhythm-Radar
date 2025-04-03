@@ -37,36 +37,40 @@ const Card = ({
   return (
     <div
       className={`
-        bg-white/5 border border-white/10 rounded-2xl p-6 
-        backdrop-blur-sm shadow-xl 
+        relative bg-white/5 border rounded-2xl p-6 
+        backdrop-blur-sm
         ${interactive ? "cursor-pointer" : ""}
         ${
           interactive && isHovered
-            ? "scale-105 shadow-2xl border-green-500/30"
-            : ""
+            ? "border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.25)]"
+            : "border-white/10 shadow-xl"
         }
-        transition-all duration-300
+        transition-colors duration-300 ease-in-out
         ${className}
       `}
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {title && (
-        <div className="flex items-center gap-2 mb-4">
-          {icon && <span className="text-green-400">{icon}</span>}
-          <h3 className={`text-xl font-bold ${titleColor}`}>{title}</h3>
-        </div>
-      )}
+      {/* Card content wrapper - no scaling */}
+      <div>
+        {title && (
+          <div className="flex items-center gap-2 mb-4">
+            {icon && <span className="text-green-400">{icon}</span>}
+            <h3 className={`text-xl font-bold ${titleColor}`}>{title}</h3>
+          </div>
+        )}
 
-      <div className="card-content">{children}</div>
+        <div className="card-content">{children}</div>
 
-      {footer && (
-        <div className="mt-4 pt-4 border-t border-white/10">{footer}</div>
-      )}
+        {footer && (
+          <div className="mt-4 pt-4 border-t border-white/10">{footer}</div>
+        )}
+      </div>
 
+      {/* Subtle background glow effect instead of scaling */}
       {isHovered && interactive && (
-        <div className="absolute inset-0 bg-green-500/5 rounded-2xl pointer-events-none"></div>
+        <div className="absolute inset-0 -z-10 bg-green-500/5 rounded-2xl" />
       )}
     </div>
   );
