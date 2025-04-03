@@ -1,8 +1,11 @@
 # 🎵 Rhythm Radar
 
+## Deploying Soon 🚀
+
 A sleek, modern dashboard that visualizes your Spotify listening habits and music personality. Discover insights about your favorite artists, tracks, and listening patterns in real-time.
 
-![Rhythm Radar](https://via.placeholder.com/1200x630?text=Rhythm+Radar+Dashboard)
+![Rhythm Radar login](https://i.imgur.com/htSfdtf.png)
+![Rhythm Radar Dashboard](https://i.imgur.com/uBVp5Cd.png)
 
 ## ✨ Features
 
@@ -32,8 +35,6 @@ A sleek, modern dashboard that visualizes your Spotify listening habits and musi
 
 - Node.js (v18+) and npm/yarn
 - Python 3.10+
-- Spotify Developer Account
-- Spotify Premium Account (for full playback functionality)
 
 ## 🛠️ Setup and Installation
 
