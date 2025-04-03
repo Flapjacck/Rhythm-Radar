@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 # Import routers
 from auth import router as auth_router
 from music_stats import router as music_stats_router
+from recommended import router as recommended_router
 
 # Load environment variables
 load_dotenv()
@@ -24,10 +25,12 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(music_stats_router)
+app.include_router(recommended_router)
 
 # Root endpoint
 @app.get("/")
 def read_root():
     return {"message": "Welcome to Rhythm Radar API. Use /login to authenticate with Spotify."}
 
+# run venv with: .\venv\Scripts\activate in directory
 # Run with: uvicorn main:app --reload
