@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import NavBar from "../components/ui/NavBar";
+import Footer from "../components/ui/Footer";
 import TopArtistsCard from "../components/cards/TopArtistsCard";
 import TopTracksCard from "../components/cards/TopTracksCard";
 import ListeningStatsCard from "../components/cards/ListeningStatsCard";
@@ -43,12 +44,12 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-neutral-900 text-white font-outfit overflow-hidden starry-background">
+    <div className="relative min-h-screen bg-neutral-900 text-white font-outfit overflow-hidden starry-background flex flex-col">
       {/* Navbar */}
       <NavBar />
 
       {/* Foreground Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 py-10">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-10 flex-grow">
         <section className="text-center">
           <h2 className="text-2xl font-semibold mb-4">
             Welcome to Rhythm Radar 🎧
@@ -68,6 +69,9 @@ const Dashboard = () => {
           </div>
         </section>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
