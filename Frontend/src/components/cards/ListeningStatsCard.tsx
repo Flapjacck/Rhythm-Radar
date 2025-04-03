@@ -50,7 +50,7 @@ const ListeningStatsCard = () => {
               <h4 className="text-sm font-medium text-green-400 mb-2">
                 Top Genres
               </h4>
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap justify-center gap-1">
                 {stats?.medium_term_genres?.map((genre, i) => (
                   <span
                     key={i}
@@ -89,7 +89,7 @@ const ListeningStatsCard = () => {
                   <h4 className="text-sm font-medium text-green-400 mb-1">
                     New Discoveries
                   </h4>
-                  <div className="text-xs text-white">
+                  <div className="text-xs text-white text-center">
                     {stats.trend.new_discoveries
                       .slice(0, 3)
                       .map((artist, i) => (
@@ -115,7 +115,7 @@ const ListeningStatsCard = () => {
                   <h4 className="text-sm font-medium text-green-400 mb-1">
                     Artists You're Loyal To
                   </h4>
-                  <div className="text-xs text-white">
+                  <div className="text-xs text-white text-center">
                     {stats.trend.consistent_favorites
                       .slice(0, 3)
                       .map((artist, i) => (

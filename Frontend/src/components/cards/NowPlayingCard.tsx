@@ -125,7 +125,7 @@ const NowPlayingCard = () => {
                       />
                     </div>
 
-                    <div className="flex-1">
+                    <div className="flex-1 text-center -ml-21">
                       <h4 className="text-white font-semibold text-lg truncate">
                         {data.track.name}
                       </h4>
