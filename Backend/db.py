@@ -37,24 +37,6 @@ def init_db():
     conn.close()
 
 # Functions for token storage
-def store_token(user_id, token_info):
-    """Store a token in the database"""
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute(
-        """
-        INSERT INTO tokens (user_id, token_data)
-        VALUES (%s, %s)
-        ON CONFLICT (user_id) 
-        DO UPDATE SET token_data = %s, updated_at = CURRENT_TIMESTAMP
-        """,
-        (user_id, json.dumps(token_info), json.dumps(token_info))
-    )
-    
-    cursor.close()
-    conn.close()
-
 def get_token(user_id):
     """Retrieve a token from the database"""
     conn = get_db_connection()
@@ -67,8 +49,41 @@ def get_token(user_id):
     conn.close()
     
     if result:
-        return json.loads(result['token_data'])
+        token_data = result['token_data']
+        # Handle both cases: when token_data is already a dict or when it's a string
+        if isinstance(token_data, dict):
+            return token_data
+        else:
+            try:
+                return json.loads(token_data)
+            except (TypeError, json.JSONDecodeError):
+                # If it can't be parsed as JSON, return as is
+                return token_data
     return None
+
+def store_token(user_id, token_info):
+    """Store a token in the database"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Ensure token_info is properly serialized as JSON string
+    if isinstance(token_info, dict):
+        token_json = json.dumps(token_info)
+    else:
+        token_json = token_info  # Assume it's already a JSON string
+    
+    cursor.execute(
+        """
+        INSERT INTO tokens (user_id, token_data)
+        VALUES (%s, %s)
+        ON CONFLICT (user_id) 
+        DO UPDATE SET token_data = %s, updated_at = CURRENT_TIMESTAMP
+        """,
+        (user_id, token_json, token_json)
+    )
+    
+    cursor.close()
+    conn.close()
 
 def add_used_code(code):
     """Add a code to the used_codes table"""
