@@ -18,7 +18,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://rhythm-radar-spencer-kellys-projects.vercel.app/",  # Update this with Vercel domain
+        "https://rhythm-radar-spencer-kellys-projects.vercel.app",  # Update this with Vercel domain
     ],
     allow_credentials=True,
     allow_methods=["*"],
