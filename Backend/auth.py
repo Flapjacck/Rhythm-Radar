@@ -1,10 +1,38 @@
-# Replace the token storage in Backend/auth.py:
+from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi.responses import JSONResponse
+import os
+import time
+import random
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 from db import store_token, get_token, add_used_code, is_code_used, cleanup_old_codes, init_db
+
+# Create the router object
+router = APIRouter(
+    tags=["authentication"]
+)
 
 # Initialize the database when the app starts
 init_db()
 
-# Then replace the relevant code in @router.get("/callback") with:
+# Set up Spotify OAuth
+SPOTIFY_CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
+REDIRECT_URI = os.environ.get("REDIRECT_URI", "http://localhost:8000/callback")
+
+sp_oauth = SpotifyOAuth(
+    client_id=SPOTIFY_CLIENT_ID,
+    client_secret=SPOTIFY_CLIENT_SECRET,
+    redirect_uri=REDIRECT_URI,
+    scope="user-top-read user-read-currently-playing playlist-modify-private playlist-read-private user-read-recently-played"
+)
+
+# Login endpoint
+@router.get("/login")
+def login():
+    auth_url = sp_oauth.get_authorize_url()
+    return {"auth_url": auth_url}
+
 @router.get("/callback")
 def callback(code: str, response: Response):
     print("Received code:", code[:10] + "...")
@@ -56,7 +84,6 @@ def callback(code: str, response: Response):
         
         return JSONResponse(status_code=400, content={"error": f"Token exchange failed: {str(e)}"})
 
-# Also update the get_spotify_client function:
 def get_spotify_client():
     from spotipy import Spotify
     
