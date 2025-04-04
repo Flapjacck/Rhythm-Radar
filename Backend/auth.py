@@ -96,18 +96,51 @@ def get_spotify_client():
     token_info = get_token("current_token")
     
     if not token_info:
+        print("No token found. User needs to authenticate.")
         raise HTTPException(status_code=401, detail="No token found. Please authenticate.")
     
     # Check if token needs refresh
     now = int(time.time())
-    is_token_expired = token_info.get('expires_at', 0) - now < 300  # 5 minutes buffer
+    expires_in = token_info.get('expires_at', 0) - now
+    is_token_expired = expires_in < 300  # 5 minutes buffer
+    
+    print(f"Token status: expires_in={expires_in} seconds, expired={is_token_expired}")
     
     if is_token_expired and 'refresh_token' in token_info:
         try:
-            print("Refreshing access token")
+            print(f"Attempting to refresh token which expires in {expires_in} seconds")
             token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+            print("Token refresh successful")
             store_token("current_token", token_info)
         except Exception as e:
-            print(f"Error refreshing token: {e}")
+            print(f"Error refreshing token: {type(e).__name__}: {e}")
+            # Don't return JSONResponse here - raise an exception instead
+            raise HTTPException(status_code=401, detail="Authentication expired, please log in again")
     
     return Spotify(auth=token_info['access_token'])
+
+@router.get("/token-debug", include_in_schema=False)
+def token_debug():
+    """Debug endpoint to check token status"""
+    try:
+        token_info = get_token("current_token")
+        
+        if not token_info:
+            return {"status": "No token found"}
+        
+        # Check token expiry
+        now = int(time.time())
+        expires_at = token_info.get('expires_at', 0)
+        expires_in = expires_at - now
+        
+        return {
+            "status": "Token found",
+            "is_expired": expires_in < 0,
+            "expires_in_seconds": expires_in,
+            "has_refresh_token": 'refresh_token' in token_info,
+            "token_type": token_info.get('token_type'),
+            # Show only partial token for security
+            "access_token_preview": token_info.get('access_token', '')[:10] + "..." if token_info.get('access_token') else None,
+        }
+    except Exception as e:
+        return {"status": "Error", "message": str(e)}
