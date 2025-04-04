@@ -35,5 +35,9 @@ app.include_router(playlist_tool_router)
 def read_root():
     return {"message": "Welcome to Rhythm Radar API. Use /login to authenticate with Spotify."}
 
+@router.get("/check-redirect")
+def check_redirect():
+    return {"redirect_uri": REDIRECT_URI}
+
 # run venv with: .\venv\Scripts\activate in directory
 # Run with: uvicorn main:app --reload
