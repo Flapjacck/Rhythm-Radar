@@ -54,7 +54,11 @@ const LoginPage = () => {
 
         <Button
           text="Connect with Spotify"
-          onClick={() => (window.location.href = "http://localhost:8000/login")}
+          onClick={() => {
+            const API_URL =
+              import.meta.env.VITE_API_URL || "http://localhost:8000";
+            window.location.href = `${API_URL}/login`;
+          }}
           icon={
             <svg
               width="24"

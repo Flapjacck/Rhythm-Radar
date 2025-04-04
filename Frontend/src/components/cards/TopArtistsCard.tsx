@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Card from "../common/card";
+import Card from "../common/Card";
 import { useTopArtists } from "../../hooks/useSpotifyData";
 
 interface TopArtistsCardProps {

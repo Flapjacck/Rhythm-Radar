@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Card from "../common/card";
+import Card from "../common/Card";
 import { useNowPlaying } from "../../hooks/useSpotifyData";
 
 const NowPlayingCard = () => {
@@ -93,7 +93,9 @@ const NowPlayingCard = () => {
         <div className="flex flex-col items-center justify-center h-16 text-gray-400">
           <p>Can't access playback information</p>
           <a
-            href="http://localhost:8000/login"
+            href={`${
+              import.meta.env.VITE_API_URL || "http://localhost:8000"
+            }/login`}
             className="text-xs text-green-400 hover:underline mt-2"
           >
             Grant additional permissions

@@ -7,6 +7,8 @@ import {
   PlaylistData,
 } from "../types/spotify";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 interface ApiResponse<T> {
   data: T | null;
   loading: boolean;
@@ -27,7 +29,7 @@ export function useTopArtists(
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/top-artists?time_range=${timeRange}&limit=${limit}`
+          `${API_BASE_URL}/api/top-artists?time_range=${timeRange}&limit=${limit}`
         );
         const data = await response.json();
 
@@ -65,7 +67,7 @@ export function useTopTracks(
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/top-tracks?time_range=${timeRange}&limit=${limit}`
+          `${API_BASE_URL}/api/top-tracks?time_range=${timeRange}&limit=${limit}`
         );
         const data = await response.json();
 
@@ -99,9 +101,7 @@ export function useListeningStats(): ApiResponse<ListeningStats> {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8000/api/listening-stats"
-        );
+        const response = await fetch(`${API_BASE_URL}/api/listening-stats`);
         const data = await response.json();
 
         if (response.ok) {
@@ -136,7 +136,7 @@ export function useNowPlaying(
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/now-playing");
+        const response = await fetch(`${API_BASE_URL}/api/now-playing`);
         const data = await response.json();
 
         if (response.ok) {
@@ -182,7 +182,7 @@ export function usePlaylistTool() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/api/playlist/fetch?playlist_input=${encodeURIComponent(
+        `${API_BASE_URL}/api/playlist/fetch?playlist_input=${encodeURIComponent(
           playlistInput
         )}`
       );
@@ -223,7 +223,7 @@ export function usePlaylistTool() {
     try {
       // Step 1: Create a new playlist
       const createResponse = await fetch(
-        "http://localhost:8000/api/playlist/create",
+        `${API_BASE_URL}/api/playlist/create`,
         {
           method: "POST",
           headers: {
@@ -245,7 +245,7 @@ export function usePlaylistTool() {
       // Step 2: Add selected tracks to the playlist
       const trackIdsArray = Array.from(selectedTracks);
       const addTracksResponse = await fetch(
-        "http://localhost:8000/api/playlist/add-tracks",
+        `${API_BASE_URL}/api/playlist/add-tracks`,
         {
           method: "POST",
           headers: {

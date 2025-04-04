@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Card from "../common/card";
 import { usePlaylistTool } from "../../hooks/useSpotifyData";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 interface UserPlaylist {
   id: string;
   name: string;
@@ -57,9 +58,7 @@ const PlaylistToolCard = () => {
   const fetchUserPlaylists = async () => {
     setIsLoadingPlaylists(true);
     try {
-      const response = await fetch(
-        "http://localhost:8000/api/playlist/user-playlists"
-      );
+      const response = await fetch(`${API_URL}/api/playlist/user-playlists`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -126,19 +125,16 @@ const PlaylistToolCard = () => {
         try {
           // Add tracks directly to existing playlist
           const trackIdsArray = Array.from(selectedTracks);
-          const response = await fetch(
-            "http://localhost:8000/api/playlist/add-tracks",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                playlist_id: selectedExistingPlaylist,
-                track_ids: trackIdsArray,
-              }),
-            }
-          );
+          const response = await fetch(`${API_URL}/api/playlist/add-tracks`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              playlist_id: selectedExistingPlaylist,
+              track_ids: trackIdsArray,
+            }),
+          });
 
           const data = await response.json();
           if (response.ok) {

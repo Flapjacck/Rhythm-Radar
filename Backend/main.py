@@ -16,7 +16,10 @@ app = FastAPI(title="Rhythm Radar API")
 # CORS setup for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://rhythm-radar.vercel.app",  # Update this with Vercel domain
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
