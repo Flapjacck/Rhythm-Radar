@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 # Import routers
-from auth import router as auth_router
+from auth import router as auth_router, REDIRECT_URI
 from music_stats import router as music_stats_router
 from playlist_tool import router as playlist_tool_router
 
@@ -18,7 +18,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://rhythm-radar-spencer-kellys-projects.vercel.app",  # Update this with Vercel domain
+        "https://rhythm-radar-spencer-kellys-projects.vercel.app",
+        "https://rhythm-radar.vercel.app",  # Add this if needed
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -35,9 +36,9 @@ app.include_router(playlist_tool_router)
 def read_root():
     return {"message": "Welcome to Rhythm Radar API. Use /login to authenticate with Spotify."}
 
-@router.get("/check-redirect")
+# Change this from router to app
+@app.get("/check-redirect")
 def check_redirect():
     return {"redirect_uri": REDIRECT_URI}
-
 # run venv with: .\venv\Scripts\activate in directory
 # Run with: uvicorn main:app --reload
