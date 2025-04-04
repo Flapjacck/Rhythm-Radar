@@ -1,4 +1,4 @@
-import Card from "../common/card";
+import Card from "../common/Card";
 import { useListeningStats } from "../../hooks/useSpotifyData";
 
 const ListeningStatsCard = () => {

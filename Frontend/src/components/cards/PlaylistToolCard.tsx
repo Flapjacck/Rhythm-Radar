@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Card from "../common/card";
+import Card from "../common/Card";
 import { usePlaylistTool } from "../../hooks/useSpotifyData";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
