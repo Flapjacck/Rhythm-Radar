@@ -24,7 +24,7 @@ sp_oauth = SpotifyOAuth(
     client_id=SPOTIFY_CLIENT_ID,
     client_secret=SPOTIFY_CLIENT_SECRET,
     redirect_uri=REDIRECT_URI,
-    scope="user-top-read user-read-currently-playing playlist-modify-private playlist-read-private user-read-recently-played"
+    scope="user-top-read user-read-currently-playing playlist-modify-private playlist-read-private user-read-recently-played user-read-playback-state"
 )
 
 # Login endpoint
