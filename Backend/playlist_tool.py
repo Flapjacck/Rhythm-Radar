@@ -4,6 +4,7 @@ from auth import get_spotify_client
 from typing import List, Optional
 from pydantic import BaseModel
 import re
+import json
 
 router = APIRouter(
     prefix="/api/playlist",
@@ -87,10 +88,18 @@ def fetch_playlist(playlist_input: str):
         }
         
     except Exception as e:
-        return JSONResponse(
-            status_code=500, 
-            content={"error": f"Failed to fetch playlist: {str(e)}"}
-        )
+        error_msg = str(e)
+        # Handle case where error might be a dict
+        if hasattr(e, '__dict__'):
+            try:
+                error_msg = json.dumps(e.__dict__)
+            except:
+                error_msg = "Error serializing exception"
+    
+    return JSONResponse(
+        status_code=500, 
+        content={"error": f"Failed to fetch top artists: {error_msg}"}
+    )
 
 @router.get("/user-playlists")
 def get_user_playlists(limit: int = 50):
@@ -119,10 +128,18 @@ def get_user_playlists(limit: int = 50):
         return {'playlists': playlists}
         
     except Exception as e:
-        return JSONResponse(
-            status_code=500, 
-            content={"error": f"Failed to fetch user playlists: {str(e)}"}
-        )
+        error_msg = str(e)
+        # Handle case where error might be a dict
+        if hasattr(e, '__dict__'):
+            try:
+                error_msg = json.dumps(e.__dict__)
+            except:
+                error_msg = "Error serializing exception"
+    
+    return JSONResponse(
+        status_code=500, 
+        content={"error": f"Failed to fetch user playlists: {error_msg}"}
+    )
 
 # Define Pydantic models for request bodies
 class PlaylistCreate(BaseModel):
@@ -161,10 +178,18 @@ def create_playlist(playlist_data: PlaylistCreate):
         }
         
     except Exception as e:
-        return JSONResponse(
-            status_code=500, 
-            content={"error": f"Failed to create playlist: {str(e)}"}
-        )
+        error_msg = str(e)
+        # Handle case where error might be a dict
+        if hasattr(e, '__dict__'):
+            try:
+                error_msg = json.dumps(e.__dict__)
+            except:
+                error_msg = "Error serializing exception"
+    
+    return JSONResponse(
+        status_code=500, 
+        content={"error": f"Failed to fetch top artists: {error_msg}"}
+    )
 
 @router.post("/add-tracks")
 def add_tracks(track_data: AddTracks):
@@ -194,7 +219,15 @@ def add_tracks(track_data: AddTracks):
         }
         
     except Exception as e:
-        return JSONResponse(
-            status_code=500, 
-            content={"error": f"Failed to add tracks to playlist: {str(e)}"}
-        )
+        error_msg = str(e)
+        # Handle case where error might be a dict
+        if hasattr(e, '__dict__'):
+            try:
+                error_msg = json.dumps(e.__dict__)
+            except:
+                error_msg = "Error serializing exception"
+    
+    return JSONResponse(
+        status_code=500, 
+        content={"error": f"Failed to add tracks: {error_msg}"}
+    )

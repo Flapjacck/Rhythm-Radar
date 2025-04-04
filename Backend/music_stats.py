@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from auth import get_spotify_client
+import json
 
 router = APIRouter(
     prefix="/api",
@@ -32,10 +33,18 @@ def top_artists(time_range: str = "medium_term", limit: int = 10):
         
         return {'artists': artists}
     except Exception as e:
-        return JSONResponse(
-            status_code=500, 
-            content={"error": f"Failed to fetch top artists: {str(e)}"}
-        )
+        error_msg = str(e)
+        # Handle case where error might be a dict
+        if hasattr(e, '__dict__'):
+            try:
+                error_msg = json.dumps(e.__dict__)
+            except:
+                error_msg = "Error serializing exception"
+    
+    return JSONResponse(
+        status_code=500, 
+        content={"error": f"Failed to fetch top artists: {error_msg}"}
+    )
 
 # Get user's top tracks
 @router.get("/top-tracks")
@@ -66,10 +75,18 @@ def top_tracks(time_range: str = "medium_term", limit: int = 10):
         
         return {'tracks': tracks}
     except Exception as e:
-        return JSONResponse(
-            status_code=500, 
-            content={"error": f"Failed to fetch top tracks: {str(e)}"}
-        )
+        error_msg = str(e)
+        # Handle case where error might be a dict
+        if hasattr(e, '__dict__'):
+            try:
+                error_msg = json.dumps(e.__dict__)
+            except:
+                error_msg = "Error serializing exception"
+    
+    return JSONResponse(
+        status_code=500, 
+        content={"error": f"Failed to fetch top tracks: {error_msg}"}
+    )
 
 # Get user's listening statistics
 @router.get("/listening-stats")
@@ -97,10 +114,18 @@ def listening_stats():
         
         return stats
     except Exception as e:
-        return JSONResponse(
-            status_code=500, 
-            content={"error": f"Failed to fetch listening stats: {str(e)}"}
-        )
+        error_msg = str(e)
+        # Handle case where error might be a dict
+        if hasattr(e, '__dict__'):
+            try:
+                error_msg = json.dumps(e.__dict__)
+            except:
+                error_msg = "Error serializing exception"
+    
+    return JSONResponse(
+        status_code=500, 
+        content={"error": f"Failed to fetch stats: {error_msg}"}
+    )
 
 # Helper functions for data processing
 def _extract_top_genres(artist_data):
@@ -172,7 +197,15 @@ def get_now_playing():
             }
         return {'is_playing': False}
     except Exception as e:
-        return JSONResponse(
-            status_code=500, 
-            content={"error": f"Failed to fetch currently playing track: {str(e)}"}
-        )
+        error_msg = str(e)
+        # Handle case where error might be a dict
+        if hasattr(e, '__dict__'):
+            try:
+                error_msg = json.dumps(e.__dict__)
+            except:
+                error_msg = "Error serializing exception"
+    
+    return JSONResponse(
+        status_code=500, 
+        content={"error": f"Failed to fetch now playing: {error_msg}"}
+    )
