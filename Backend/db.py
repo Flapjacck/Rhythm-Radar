@@ -1,5 +1,6 @@
 import os
 import json
+import hashlib
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -74,7 +75,10 @@ def add_used_code(code):
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    cursor.execute("INSERT INTO used_codes (code) VALUES (%s) ON CONFLICT DO NOTHING", (code,))
+    # Create a hash of the code instead of storing the full code
+    code_hash = hashlib.sha256(code.encode()).hexdigest()
+    
+    cursor.execute("INSERT INTO used_codes (code) VALUES (%s) ON CONFLICT DO NOTHING", (code_hash,))
     
     cursor.close()
     conn.close()
@@ -84,7 +88,10 @@ def is_code_used(code):
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    cursor.execute("SELECT 1 FROM used_codes WHERE code = %s", (code,))
+    # Create a hash of the code for comparison
+    code_hash = hashlib.sha256(code.encode()).hexdigest()
+    
+    cursor.execute("SELECT 1 FROM used_codes WHERE code = %s", (code_hash,))
     result = cursor.fetchone() is not None
     
     cursor.close()
@@ -101,3 +108,4 @@ def cleanup_old_codes():
     
     cursor.close()
     conn.close()
+
