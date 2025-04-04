@@ -19,7 +19,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "https://rhythm-radar-spencer-kellys-projects.vercel.app",
-        "https://rhythm-radar.vercel.app",  # Add this if needed
+        "https://rhythm-radar-spencer-kellys-projects.vercel.app/callback",
     ],
     allow_credentials=True,
     allow_methods=["*"],
