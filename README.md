@@ -9,27 +9,36 @@ A sleek, modern dashboard that visualizes your Spotify listening habits and musi
 
 ## ✨ Features
 
-- **Now Playing** - Real-time display of your currently playing track with progress bar
-- **Top Artists** - Discover who you listen to most across different time periods
-- **Top Tracks** - Explore your most-played songs with audio previews
-- **Listening Stats** - Visualize your music habits, genre preferences, and artist loyalty
-- **Audio Previews** - Listen to 30-second previews directly in the app
+- Real-time music playback tracking
+- Personalized artist and track analytics
+- Custom playlist creation tool
 
 ## 🚀 Technologies
 
 ### Frontend
 
-- [React 19](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS 4](https://tailwindcss.com/)
-- [React Router DOM](https://reactrouter.com/)
-- [Vite](https://vitejs.dev/)
+- **React 19**: UI component library (latest version)
+- **TypeScript**: Static type checking
+- **Tailwind CSS 4**: Utility-first CSS framework
+- **React Router DOM 7**: Client-side routing
+- **Vite**: Next-generation frontend build tool
+- **SWC**: Super-fast TypeScript/JavaScript compiler
 
 ### Backend
 
-- [Python](https://www.python.org/)
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [Spotipy](https://spotipy.readthedocs.io/) - Python client for Spotify API
+- **FastAPI**: Modern, high-performance web framework for building APIs
+- **Uvicorn**: ASGI server implementation for running FastAPI
+- **Spotipy**: Python library for the Spotify Web API
+- **PostgreSQL**: Database for storing user tokens and session data
+- **psycopg2-binary**: PostgreSQL adapter for Python
+- **python-dotenv**: Environment variable management
+- **python-multipart**: Multipart form data parser
+
+### Deployment Infrastructure
+
+- **Vercel**: Frontend hosting and deployment
+- **Render**: Backend API hosting and deployment
+- **PostgreSQL**: Database hosting (via Render)
 
 ## 📋 Prerequisites
 

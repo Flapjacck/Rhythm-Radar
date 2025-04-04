@@ -75,6 +75,11 @@ const LoginPage = () => {
           Powered by Spotify API. Login to analyze your music taste and get
           personalized recommendations.
         </p>
+
+        <p className="text-amber-400 mt-6 text-center max-w-xs text-sm font-outfit">
+          ⚠️ This app is currently in development mode and only accepts
+          authorized Spotify accounts. Contact the developer to request access.
+        </p>
       </div>
     </div>
   );
