@@ -9,7 +9,7 @@ const Callback = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
+    const token = urlParams.get("token");
     const errorParam = urlParams.get("error");
 
     if (errorParam) {
@@ -17,8 +17,17 @@ const Callback = () => {
       return;
     }
 
+    // Direct token handling
+    if (token) {
+      login(token);
+      navigate("/");
+      return;
+    }
+
+    // Fallback to code exchange if no direct token
+    const code = urlParams.get("code");
     if (!code) {
-      setError("No authorization code received from Spotify");
+      setError("No authorization code or token received");
       return;
     }
 
@@ -33,12 +42,10 @@ const Callback = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("Access token response:", data);
         login(data.access_token);
         navigate("/");
       })
       .catch((err) => {
-        console.error("Error exchanging code for token:", err);
         setError(err.message || "Failed to exchange code for token");
       });
   }, [navigate, login]);

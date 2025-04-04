@@ -68,7 +68,12 @@ def callback(code: str, response: Response):
         
         # Store token info
         store_token("current_token", token_info)
-        return JSONResponse(token_info)
+        
+        # CHANGE THIS: Instead of returning JSON, redirect to the frontend with token
+        frontend_url = os.environ.get("FRONTEND_URL", "https://rhythm-radar-spencer-kellys-projects.vercel.app")
+        redirect_url = f"{frontend_url}/callback?token={token_info['access_token']}&expires_in={token_info['expires_in']}"
+        
+        return RedirectResponse(url=redirect_url)
         
     except Exception as e:
         print(f"Error exchanging code for token: {str(e)}")
